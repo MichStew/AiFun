@@ -1,0 +1,14 @@
+procedure largest_finder(list)
+  local largest, num
+  largest := list[1]
+  every num := !list do
+    if num > largest then largest := num
+  return largest
+end
+
+procedure main()
+  local number_list, result
+  number_list := [33, 65, 27, 223, 63]
+  result := largest_finder(number_list)
+  write("the largest number is ", result)
+end
