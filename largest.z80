@@ -1,0 +1,98 @@
+        org     100h
+
+start:
+        ld      hl, 33          ; current largest = 33
+
+        ld      a, 65
+        cp      l
+        jr      c, skip65
+        ld      l, a
+skip65:
+        ld      a, 27
+        cp      l
+        jr      c, skip27
+        ld      l, a
+skip27:
+        ld      a, 223
+        cp      l
+        jr      c, skip223
+        ld      l, a
+skip223:
+        ld      a, 63
+        cp      l
+        jr      c, done_max
+        ld      l, a
+
+done_max:
+        ld      de, msg
+        ld      c, 9            ; BDOS: print $-terminated string
+        call    5
+
+        ld      a, l
+        call    print_u8
+
+        ld      de, crlf
+        ld      c, 9
+        call    5
+
+        ret
+
+; ----------------------------
+; print_u8
+;   Input: A = 0..255
+;   Prints decimal ASCII using BDOS function 2.
+; ----------------------------
+print_u8:
+        ld      b, 0            ; hundreds count
+hundreds_loop:
+        cp      100
+        jr      c, after_hundreds
+        sub     100
+        inc     b
+        jr      hundreds_loop
+
+after_hundreds:
+        ld      c, a            ; remainder after hundreds, 0..99
+        ld      a, b
+        or      a
+        jr      z, tens_phase
+        add     a, '0'
+        call    putc
+        ld      a, c
+
+tens_phase:
+        ld      b, 0
+tens_loop:
+        cp      10
+        jr      c, ones_phase
+        sub     10
+        inc     b
+        jr      tens_loop
+
+ones_phase:
+        ld      c, a            ; ones digit remainder
+
+        ld      a, b
+        or      a
+        jr      nz, print_tens_digit
+        ld      a, c
+        cp      10
+        jr      c, print_ones_only
+print_tens_digit:
+        add     a, '0'
+        call    putc
+
+print_ones_only:
+        ld      a, c
+        add     a, '0'
+        call    putc
+        ret
+
+putc:
+        ld      e, a
+        ld      c, 2            ; BDOS: console output
+        call    5
+        ret
+
+msg:    db      'the largest number is ', '$'
+crlf:   db      13, 10, '$'
