@@ -1,0 +1,20 @@
+        LARGE = 33
+
+        GT(65, LARGE) :S(L65)
+C27     GT(27, LARGE) :S(L27)
+C223    GT(223, LARGE) :S(L223)
+C63     GT(63, LARGE) :S(L63)
+        OUTPUT = 'the largest number is ' LARGE
+        END
+
+L65     LARGE = 65
+        :(C27)
+
+L27     LARGE = 27
+        :(C223)
+
+L223    LARGE = 223
+        :(C63)
+
+L63     LARGE = 63
+        :(PRINT)
