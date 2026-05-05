@@ -1,0 +1,34 @@
+#USE "course.lib"
+
+INT FUNCTION largest.finder (VAL []INT list)
+  INT largest :
+  VALOF
+    SEQ
+      largest := list[0]
+
+      SEQ i = 1 FOR (SIZE list) - 1
+        IF
+          list[i] > largest
+            largest := list[i]
+          TRUE
+            SKIP
+
+      RESULT largest
+:
+
+PROC main (CHAN BYTE keyboard?, screen!, error!)
+  [5]INT number.list :
+  INT result :
+  SEQ
+    number.list[0] := 33
+    number.list[1] := 65
+    number.list[2] := 27
+    number.list[3] := 223
+    number.list[4] := 63
+
+    result := largest.finder (number.list)
+
+    out.string ("the largest number is ", 0, screen!)
+    out.int (result, 0, screen!)
+    out.string ("*n", 0, screen!)
+:
